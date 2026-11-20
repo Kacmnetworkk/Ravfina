@@ -1,0 +1,31 @@
+---
+title: One Operation Registry, Three Surfaces: REST, MCP, and OpenAPI 3.1
+slug: unified-rest-mcp-openapi
+topic: Developer API
+publishedAt: 2026-10-28
+author: Priya Nair, Staff Platform Engineer
+readingTime: 4 min read
+summary: Keeping AI agent tools, HTTP documentation, and Zod runtime validation synchronized from a single source of truth.
+---
+
+# One Operation Registry, Three Surfaces
+
+Schema drift between REST controllers, OpenAPI YAML specs, and Model Context Protocol (MCP) tool definitions slows engineering teams down. In Ravfina, every endpoint lives inside one typed `API_OPERATIONS` catalog backed by Zod schemas in `packages/contracts`.
+
+## Deterministic Spec & Tool Generation
+
+1. Validate inbound payloads in Express routes with `schema.safeParse(req.body)`.
+2. Derive `/api/v1/openapi.json` paths, tags, and example schemas directly from the registry.
+3. Expose `/api/v1/mcp/tools` and JSON-RPC `POST /api/v1/mcp` (`tools/list`, `tools/call`) from the exact same handler contracts.
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "tools/call",
+  "params": {
+    "name": "get_treasury_overview",
+    "arguments": { "org": "vanguard-robotics" }
+  }
+}
+```

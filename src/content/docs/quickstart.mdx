@@ -1,0 +1,22 @@
+---
+title: Quickstart & Organization Architecture
+slug: quickstart-org-architecture
+section: Foundations
+order: 1
+updatedAt: 2026-11-15
+summary: Bootstrapping your /app/[org] workspace, linking operating banks, and configuring multi-currency wallets.
+---
+
+# Quickstart & Organization Architecture
+
+Every Ravfina tenant runs inside an isolated organization slug under `/app/[org]` (for example `/app/vanguard-robotics` or `/app/northstar-cloud`). Each organization owns segregated currency wallets, card spend guardrails, credit facilities, and RBAC team memberships.
+
+## Default Environment URLs
+
+- **Marketing & Pricing**: `/` and `/pricing`
+- **Signed-In Workspace**: `/app/vanguard-robotics` (`?autostart=1` resolves automatically)
+- **Developer Hub (REST + MCP + OpenAPI + Billing)**: `/api`
+
+<Callout tone="amber" title="Role Hierarchy">
+Supported server-side roles include Owner, FinanceAdmin, Controller, Maker, Checker, and Viewer. Maker/Checker separation blocks self-approval on pending money movements.
+</Callout>

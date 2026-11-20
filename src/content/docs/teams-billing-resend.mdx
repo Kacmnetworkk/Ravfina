@@ -1,0 +1,16 @@
+---
+title: Teams, Billing & Resend Invitation Emails
+slug: teams-billing-resend
+section: Governance & Ops
+order: 4
+updatedAt: 2026-11-16
+summary: Managing org seats, metered billing plans, and Resend-powered team invitation delivery.
+---
+
+# Teams, Billing & Resend Invitation Emails
+
+Teams management lives directly inside `/app/[org]` under the **Teams & Approvals** module, while metered Billing plans, usage meters, and invoices are unified inside `/api` and `/pricing`.
+
+## Resend Invitation Delivery
+
+When you invite a controller or maker via `POST /api/v1/orgs/:org/invitations`, Ravfina constructs a responsive HTML invitation email containing the organization slug, assigned role, and one-click `/auth?invite=TOKEN` accept link. If `RESEND_API_KEY` is present in the server environment, it dispatches live through `https://api.resend.com/emails`; otherwise, it records the payload in the live Preview Outbox so you can inspect the rendered HTML email template immediately.

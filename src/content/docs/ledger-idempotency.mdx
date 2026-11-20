@@ -1,0 +1,27 @@
+---
+title: Double-Entry Ledger & Idempotent Transfers
+slug: ledger-idempotency
+section: Core Infrastructure
+order: 2
+updatedAt: 2026-11-14
+summary: Posting balanced multi-currency transfers via POST /api/v1/orgs/:org/transfers with Idempotency-Key safety.
+---
+
+# Double-Entry Ledger & Idempotent Transfers
+
+Money-moving endpoints require an `Idempotency-Key` header or payload field so network retries never double-debit an operating wallet.
+
+## Approval Threshold Routing
+
+When an outbound transfer exceeds $50,000 USD (`5000000` minor units), the server creates a `MakerCheckerApproval` item (`Pending`) instead of immediately crediting the destination account. A second team member with `Checker`, `Controller`, or `Owner` permissions completes settlement via `/api/v1/orgs/:org/approvals/:id/decide`.
+
+```json
+{
+  "fromWalletId": "wal-usd-01",
+  "toAccount": "vendor:aws-enterprise",
+  "amountMinor": 1250000,
+  "currency": "USD",
+  "memo": "Q4 Reserved Compute",
+  "idempotencyKey": "idem-aws-2026-q4"
+}
+```

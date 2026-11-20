@@ -1,0 +1,36 @@
+---
+title: Designing Append-Only Double-Entry Ledgers in Minor Units
+slug: append-only-double-entry-ledgers
+topic: Engineering
+publishedAt: 2026-11-12
+author: Elena Vance, Principal Ledger Architect
+readingTime: 6 min read
+summary: Why Ravfina stores every treasury balance as integer minor units paired with balanced debit and credit legs.
+---
+
+# Designing Append-Only Double-Entry Ledgers
+
+Financial ledgers fail in subtle ways when applications store currency as floating-point numbers or mutate running balance columns directly. Every Ravfina organization (`vanguard-robotics`, `northstar-cloud`, `helion-bio`) posts transfers and drawdowns through an immutable journal table where every transaction sums strictly to zero.
+
+## Integer Minor Units Everywhere
+
+A $25,000.50 USD wire is never persisted as `25000.5`. It enters our shared Zod contracts as `{ amountMinor: 2500050, currency: "USD" }`, while zero-decimal currencies such as JPY use multiplier `1` (`¥100,000` equals `100000` minor units).
+
+<Callout tone="amber" title="Zero-Sum Conservation Law">
+Every journal entry verifies sum(DEBIT) === sum(CREDIT) per currency before acquiring an idempotency lock and committing to PostgreSQL.
+</Callout>
+
+## Reversals Over Destructive Edits
+
+If a controller rejects a cross-border settlement or spots a NetSuite GL mismatch, the ledger never deletes or overwrites the historical row. Instead, Ravfina appends a compensating reversal journal referencing the original `journalId` and posts the updated classification to the audit log.
+
+```json
+{
+  "journalId": "jrn_019a2f",
+  "idempotencyKey": "idem-fx-2026-1112",
+  "legs": [
+    { "account": "USD Operating Wallet", "direction": "DEBIT", "amountMinor": 2500000 },
+    { "account": "FX Clearing Desk", "direction": "CREDIT", "amountMinor": 2500000 }
+  ]
+}
+```

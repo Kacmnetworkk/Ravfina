@@ -1,0 +1,19 @@
+---
+title: Corporate Cards, MCC Allowlists & HoloCard UI
+slug: corporate-cards-mcc
+section: Spend Control
+order: 3
+updatedAt: 2026-11-10
+summary: Issuing Titanium physical and virtual cards with real-time MCC enforcement and 3D HoloCard inspection.
+---
+
+# Corporate Cards, MCC Allowlists & HoloCard UI
+
+Virtual and physical corporate cards enforce per-transaction caps, daily velocity counters, and approved Merchant Category Codes (`5734` Software, `7372` Cloud Hosting, `4511` Airlines, `5812` Dining).
+
+## Authorization Pipeline
+
+1. Verify card status is `Active` (not `Frozen`).
+2. Check single-transaction limit and daily velocity count.
+3. Confirm MCC belongs to the card or organization allowlist.
+4. Append authorization telemetry to the workspace Recent Activity feed.

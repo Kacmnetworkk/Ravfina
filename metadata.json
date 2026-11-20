@@ -1,0 +1,6 @@
+{
+  "name": "Ravfina",
+  "description": "Institutional treasury management, business funding, corporate card controls, and multi-currency ERP reconciliation powered by Ravfina.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

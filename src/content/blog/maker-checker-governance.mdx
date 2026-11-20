@@ -1,0 +1,19 @@
+---
+title: Hardware WebAuthn & Maker-Checker Approvals for Wire Governance
+slug: maker-checker-wire-governance
+topic: Security
+publishedAt: 2026-10-19
+author: David Kowalski, Head of Security
+readingTime: 5 min read
+summary: Enforcing dual-controller separation of duties across corporate cards, wires, and high-value FX sweeps.
+---
+
+# Maker-Checker Approvals for Wire Governance
+
+Single-credential treasury accounts create catastrophic blast radius when an operator laptop is compromised. Ravfina enforces strict segregation of duties: the team member who initiates a wire or high-limit transfer (`Maker`) can never satisfy the second signature (`Checker`).
+
+## Policy Rules Evaluated in Under 12ms
+
+- Wires exceeding the organization threshold enter `PendingApproval` before touching settlement rails.
+- Hardware FIDO2 passkeys sign both approval challenges and API key rotations.
+- Every rejection or approval writes an immutable audit event streamed into the live workspace log.
